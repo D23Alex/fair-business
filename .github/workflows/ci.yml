@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v2
         with:
           java-version: '21'
@@ -27,24 +27,3 @@ jobs:
 
       - name: Run Tests
         run: mvn test
-
-  deploy:
-    runs-on: ubuntu-latest
-
-    needs: build
-
-    steps:
-      - name: inst
-        run: sudo apt update && sudo apt install -y sshpass
-
-      - name: something
-        run: mkdir ~/.ssh
-
-      - name: somethingelse
-        run: echo "StrictHostKeyChecking no" > ~/.ssh/config
-
-      - name: copy
-        run: sshpass -p ${{ secrets.REMOTE_PASSWORD }} scp -P ${{ secrets.REMOTE_PORT }} target ${{ secrets.REMOTE_USERNAME }}@${{ secrets.REMOTE_HOST }}:/home/studs/s336541
-
-      - name: Run JAR on Remote Server
-        run: sshpass -p ${{ secrets.REMOTE_PASSWORD }} ssh ${{ secrets.REMOTE_USERNAME }}@${{ secrets.REMOTE_HOST }} -p ${{ secrets.REMOTE_PORT }} 'java -jar /path/to/remote/directory/*.jar'
