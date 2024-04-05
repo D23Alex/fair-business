@@ -41,7 +41,7 @@ jobs:
           username: ${{ secrets.REMOTE_USERNAME }}
           password: ${{ secrets.REMOTE_PASSWORD }}
           port: ${{ secrets.REMOTE_PORT }}
-          source: "target/*.jar"
+          source: "pom.xml"
           target: "/home/studs/s336541"
 
       - name: Run JAR on Remote Server
