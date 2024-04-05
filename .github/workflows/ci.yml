@@ -38,7 +38,7 @@ jobs:
         run: sudo apt update && sudo apt install -y sshpass
 
       - name: copy
-        run: sshpass -p ${{ secrets.REMOTE_PASSWORD }} scp -P ${{ secrets.REMOTE_PORT }} pom.xml ${{ secrets.REMOTE_USERNAME }}@${{ secrets.REMOTE_HOST }}:/home/studs/s336541
+        run: sshpass -o StrictHostKeyChecking=no -p ${{ secrets.REMOTE_PASSWORD }} scp -P ${{ secrets.REMOTE_PORT }} pom.xml ${{ secrets.REMOTE_USERNAME }}@${{ secrets.REMOTE_HOST }}:/home/studs/s336541
 
       - name: Run JAR on Remote Server
         run: sshpass -p ${{ secrets.REMOTE_PASSWORD }} ssh ${{ secrets.REMOTE_USERNAME }}@${{ secrets.REMOTE_HOST }} -p ${{ secrets.REMOTE_PORT }} 'java -jar /path/to/remote/directory/*.jar'
