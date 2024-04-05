@@ -1,10 +1,7 @@
-name: CI/CD Pipeline
+name: Java Spring Boot CI/CD
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
@@ -13,43 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '21'
           distribution: 'temurin'
+          java-version: '21'
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -B package
 
-      - name: Run Tests
+      - name: Test with Maven
         run: mvn test
 
-  deploy:
-    runs-on: ubuntu-latest
-
-    needs: build
-
-    steps:
       - name: Deploy to Remote Server
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.REMOTE_SERVER_HOST }}
-          port: ${{ secrets.REMOTE_SERVER_PORT }}
-          username: ${{ secrets.REMOTE_SERVER_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: 'target/your-application.jar'
-          target: '~/app/your-application.jar'
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          password: ${{ secrets.REMOTE_PASSWORD }}
+          port: ${{ secrets.REMOTE_PORT }}
+          source: "target/*.jar"
+          target: "/path/to/remote/directory/"
 
-      - name: SSH into Remote Server and Run JAR
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.REMOTE_SERVER_HOST }}
-          username: ${{ secrets.REMOTE_SERVER_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd ~/app
-            java -jar your-application.jar
+      - name: Run JAR on Remote Server
+        run: sshpass -p ${{ secrets.REMOTE_PASSWORD }} ssh ${{ secrets.REMOTE_USERNAME }}@${{ secrets.REMOTE_HOST }} -p ${{ secrets.REMOTE_PORT }} 'java -jar /path/to/remote/directory/*.jar'
