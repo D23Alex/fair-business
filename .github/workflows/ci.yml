@@ -42,7 +42,7 @@ jobs:
           password: ${{ secrets.REMOTE_PASSWORD }}
           port: ${{ secrets.REMOTE_PORT }}
           source: "target/*.jar"
-          target: "/path/to/remote/directory/"
+          target: "/home/studs/s336541"
 
       - name: Run JAR on Remote Server
         run: sshpass -p ${{ secrets.REMOTE_PASSWORD }} ssh ${{ secrets.REMOTE_USERNAME }}@${{ secrets.REMOTE_HOST }} -p ${{ secrets.REMOTE_PORT }} 'java -jar /path/to/remote/directory/*.jar'
